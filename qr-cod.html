@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Matrix Love</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        font-family: Arial, sans-serif;
+    }
+
+    canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .center-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: hotpink;
+        font-size: 32px;
+        text-align: center;
+        z-index: 10;
+        text-shadow: 0 0 10px hotpink;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="center-text" id="text"></div>
+
+<script>
+// === МАТРИЦА ===
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const numbers = "0123456789";
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+const drops = Array(columns).fill(1);
+
+function draw() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "hotpink";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+        const text = numbers[Math.floor(Math.random() * numbers.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+        drops[i]++;
+    }
+}
+
+setInterval(draw, 35);
+
+// === СЛАЙД-ШОУ ТЕКСТА ===
+const lines = [
+    "ты как майями зимой",
+    "как бриллиант на свету",
+    "ты как вернуться домой",
+    "в 45-году"
+];
+
+let index = 0;
+const textEl = document.getElementById("text");
+
+function showText() {
+    textEl.style.opacity = 0;
+
+    setTimeout(() => {
+        textEl.innerHTML = lines[index];
+        textEl.style.opacity = 1;
+        index = (index + 1) % lines.length;
+    }, 1000);
+}
+
+setInterval(showText, 3000);
+showText();
+
+// адаптация
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
